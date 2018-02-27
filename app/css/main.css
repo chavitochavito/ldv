@@ -19,6 +19,25 @@ header{
     background-color: initial;
 }
 
+.logo{
+	background-image: url("../images/Logo.gif");
+	background-repeat: no-repeat;
+	background-size: auto;
+	background-clip: content-box;	
+	display: block;
+	width: 249px;
+	height: 120px;
+	text-indent: -12000px;
+
+
+}
+
+
+.menu-top{
+
+	color: #666666;
+}
+
 footer{
 	background: url("../images/footer.png");
 	color:#fff;
@@ -27,7 +46,7 @@ footer{
 
 
 #banner-home{
-	background:  #ddd;
+	background: linear-gradient(141deg, #323232 0%, #000 51%, #323232 75%);
 	height: 400px;	
 	border: 0px solid #222;
 }
