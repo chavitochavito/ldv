@@ -25,7 +25,7 @@
       <div class="container" id="header">
         <div class="row">
           <div class="col-md-4">
-            <h1>Lances de Vantagens</h1>
+            <h1 class="logo">Lances de Vantagens</h1>
           </div>
           <div class="col-md-4">
             menu top
@@ -38,41 +38,82 @@
     </header>
     
     <main>
-      <div class="container">
+      <div class="container-fluid">
         <div class="row">
           <div id="banner-home" class="col-sm-12">
-            propagandas da home
-
+            <div id="carousel" class="carousel slide" data-ride="carousel" data-interval="5000">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                  <li data-target="#carousel" data-slide-to="0" class=""></li>
+                  <li data-target="#carousel" data-slide-to="1" class="active"></li>
+                  <li data-target="#carousel" data-slide-to="2" class=""></li>
+                </ol>
+                <div class="carousel-inner" role="listbox">
+                  <div class="item">
+                    <img class="first-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="First slide">
+                    <div class="container">
+                      <div class="carousel-caption">
+                        <h1>Etiam vel neque sapien</h1>
+                        <p>NVestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla facilisi. Pellentesque vehicula nibh vel justo scelerisque, et maximus dolor dictum.</p>
+                        <p><a class="btn btn-lg btn-warning" href="#" role="button">Praesent</a></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item active">
+                    <img class="second-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Second slide">
+                    <div class="container">
+                      <div class="carousel-caption">
+                        <h1>Maecenas vitae ex a ligula bibendum tristique ac a lectus.</h1>
+                        <p>Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim. Aenean sit amet ultricies neque. Suspendisse egestas mattis risus, posuere bibendum ipsum consequat et. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus semper elit et turpis scelerisque sagittis. Donec nec mi viverra, vehicula neque a, dictum libero. </p>
+                        <p><a class="btn btn-lg btn-warning" href="#" role="button">Donec</a></p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item">
+                    <img class="third-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Third slide">
+                    <div class="container">
+                      <div class="carousel-caption">
+                        <h1>Phasellus semper elit et turpis scelerisque sagittis. </h1>
+                        <p>Praesent elit sem, fermentum ut viverra in, posuere non libero. Aliquam posuere ultricies purus nec tincidunt. Mauris eget quam dui. Pellentesque purus urna, vulputate eu malesuada eget, scelerisque a arcu. In maximus sollicitudin justo, eu dapibus velit bibendum non. Nunc justo nisl, sagittis egestas enim vel, pellentesque euismod mi. </p>
+                        <p><a class="btn btn-lg btn-warning" href="#" role="button">Mauris</a></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <a class="left carousel-control" href="#carousel" role="button" data-slide="prev">
+                  <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#carousel" role="button" data-slide="next">
+                  <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </div>
+            <!-- carrossel -->
           </div>
           <!-- #banner-home -->
-
         </div>
         <!-- .row -->
-        <div class="row">
 
+        <div class="row">
           <div id="produto-destaque" class="col-sm-8">
             produto destaque
-            
           </div>
           <!-- #produto-destaque -->
           <div id="ultimo-produto" class="col-sm-4">
             ultimo produto
-            
           </div>
           <!-- #ultimo-produto -->
-
         </div>
         <!-- .row -->
 
         <div id="leiloes" class="row">
 
-          <!-- .leilao -->
+          <div class="leilao col-xs-6 col-sm-3  ">
 
-          <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-            <table align="center" valign="middle" border="0" cellpadding="0" cellspacing="0" style="background:url(http://www.lancesdevantagens.com.br/templates/LancesDeVantagens/img_files/prod.gif) no-repeat center;" class="auctionContainer">
+            <table align="center" valign="middle" border="0" cellpadding="0" cellspacing="0" class="auctionContainer">
               <tbody><tr>
-                <td valign="top" width="180" height="290" align="center">
+                <td valign="top" align="center">
 
                   <table height="49" border="0" cellpadding="0" cellspacing="0">
                     <tbody><tr>
@@ -149,130 +190,16 @@
 
 
               </div>
-              <!-- .leilao -->
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
+          <!-- .leilao -->
 
 
 
+        </div>
+        <!-- .row  -->
+    </main>
 
-              </div>
-              <!-- .leilao -->
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-
-
-
-              </div>
-              <!-- .leilao -->
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-
-
-
-              </div>
-              <!-- .leilao -->
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-
-
-
-              </div>
-              <!-- .leilao -->
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-
-
-
-              </div>
-              <!-- .leilao -->
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-
-
-
-              </div>
-              <!-- .leilao -->
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-
-
-
-              </div>
-              <!-- .leilao -->
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-
-
-
-              </div>
-              <!-- .leilao -->
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-
-
-
-              </div>
-              <!-- .leilao -->
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-
-
-
-              </div>
-              <!-- .leilao -->
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-
-
-
-              </div>
-              <!-- .leilao -->
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-
-
-
-              </div>
-              <!-- .leilao -->
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-
-
-
-              </div>
-              <!-- .leilao -->
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-
-
-
-              </div>
-              <!-- .leilao -->
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-                s
-
-              </div>
-              <!-- .leilao --> 
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-                s
-
-              </div>
-              <!-- .leilao --> 
-              <div class="leilao col-xs-6 col-sm-3 col-md-2 " >
-
-                s
-
-              </div>
-              <!-- .leilao --> 
-
-            </div>
-            <!-- .row  -->
-
-          </main>
-
-          <footer>
+ 
+         <footer>
             <div class="container">
               <div class="row">
                 <div class="col-md-3">Formas de pagamento</div>
@@ -288,9 +215,8 @@
 
 
 
-
             <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <script src="js/jquery.min.js"></script>
             <!-- Inclui todos os plugins compilados (abaixo), ou inclua arquivos separadados se necessário -->
             <script src="js/bootstrap.min.js"></script>
 

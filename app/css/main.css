@@ -28,8 +28,22 @@ footer{
 
 #banner-home{
 	background:  #ddd;
-	height: 250px;	
+	height: 400px;	
 	border: 0px solid #222;
+}
+
+#carousel{
+	height: 400px;
+}
+	#carousel .carousel-caption{
+		position: static;
+	}
+	#carousel .carousel-control.left,
+	#carousel .carousel-control.right{
+		background: none;
+	}
+	#carousel .container{
+		margin-top: 90px;
 }
 
 #produto-destaque{
@@ -47,12 +61,13 @@ footer{
 
 
 .leilao{
-	background: #ddd;
+	background: #bbb;
 	min-height: 350px;
 	border: 1px solid #222;
+
 }
 .leilao:nth-child(odd) {
-	background: #aaa;
+	background: #eee;
 
 }
 
