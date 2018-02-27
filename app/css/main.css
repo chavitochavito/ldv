@@ -116,7 +116,7 @@ footer{
 
 
 footer{
-	height: 250px;
+	min-height: 250px;
 }
 
 
