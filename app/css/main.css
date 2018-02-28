@@ -75,14 +75,16 @@ header{
 }
 
 #produto-destaque{
-	background: #aaa;
-	height: 250px;
-	border: 0px solid #222;
+	background: #ddd;
+	min-height: 250px;
+	border-right: 1px solid #ddd;
+
 }
 
-#ultimo-produto{
+
+#maior-desconto{
 	background: #eee;
-	height: 250px;
+	min-height: 265px;
 	border: 0px solid #222;
 }
 
@@ -98,15 +100,54 @@ header{
 
 
 .leilao{
-	background: #bbb;
+	background: #ddd;
 	min-height: 350px;
-	border: 1px solid #222;
+	text-align: center;
+	padding-bottom: 20px;
+	border:1px solid #ccc;
 
 }
 .leilao:nth-child(odd) {
 	background: #eee;
 
 }
+.leilao a{ text-decoration: none; }
+.leilao span{
+	display: block;color:#666666; 
+}
+.leilao .de{ font-size:15px; color:#666666; font-weight: bold; }
+.leilao .por{ font-size: 18px; color: #FE893D; font-weight: bold;}
+.leilao .cronometro{ font-size: 20px; font-weight: bold; }
+.leilao .imagem-leilao{margin-bottom:10px;}
+.leilao .nome-leilao{font-weight: bold;}
+
+.destaque{
+	text-align: center;
+}
+.destaque h3{font-size: 30px;}
+.destaque .de{ font-size: 22px; color:#666666; font-weight: bold; }
+.destaque .por{ font-size: 24px; color: #FE893D; font-weight: bold;}
+.destaque .cronometro{ font-size: 30px; font-weight: bold; }
+.destaque .imagem-leilao{margin-bottom:10px;}
+.destaque .nome-leilao{font-weight: bold;}
+
+#maior-desconto {
+	text-align: center;
+}
+#maior-desconto span{
+	
+	display: block;color:#666666; 
+
+}
+#maior-desconto h3{font-size: 26px;}
+#maior-desconto .de{ font-size: 14px; color:#666666; font-weight: bold; }
+#maior-desconto .por{ font-size: 14px; color: #FE893D; font-weight: bold;}
+#maior-desconto .economia{ font-size: 14px; color:#666666; font-weight: bold; }
+
+#maior-desconto .desconto{ font-size: 38px; font-weight: bold; }
+#maior-desconto .imagem-leilao{margin-bottom:10px;}
+#maior-desconto .nome-vendido{font-weight: bold;}
+
 
 /* footer */
 footer{
