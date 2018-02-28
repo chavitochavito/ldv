@@ -148,6 +148,18 @@ header{
 #maior-desconto .imagem-leilao{margin-bottom:10px;}
 #maior-desconto .nome-vendido{font-weight: bold;}
 
+.full-bar{
+
+    color: #fff;
+    background: linear-gradient(270deg,#febb52,#ff5800,#febb52,#ff5800);
+    background-size: 800% 800%;
+    animation: backgroundTransition 20s ease infinite;
+    padding:5px 0 15px;
+
+
+}
+
+
 
 /* footer */
 footer{
