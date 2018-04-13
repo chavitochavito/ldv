@@ -1,22 +1,22 @@
-@media (max-width: 800px) {
-
-
-}
-
-@media (max-width: @screen-sm) {
-    body{font-size: 14px;}
-}
-
-  
-
 body{
-	font-family: Roboto,sans-serif;]
+	font-family: Roboto,sans-serif;
+
 
 }
 
 
 header{
-	background-color: #eee;
+	background:linear-gradient(175deg,#eca713 0,#ffc925 40%);
+    background-image: linear-gradient(175deg, rgb(236, 167, 19) 0px, rgb(255, 201, 37) 40%);
+    background-position-x: initial;
+    background-position-y: initial;
+    background-size: initial;
+    background-repeat-x: initial;
+    background-repeat-y: initial;
+    background-attachment: initial;
+    background-origin: initial;
+    background-clip: initial;
+    background-color: initial;
 }
 
 .logo{
@@ -28,6 +28,7 @@ header{
 	width: 160px;
 	height: 75px;
 	text-indent: -12000px;
+	margin-left: 20px;
 }
 
 
@@ -45,6 +46,7 @@ header{
 }
 
 .menu-top, .menu-principal{
+	font-size: 14px;
 	color: #666666;
 }
 
@@ -71,6 +73,7 @@ header{
 }
 
 #produto-destaque{
+	background: #ddd;
 	min-height: 250px;
 	border-right: 1px solid #ddd;
 
@@ -78,6 +81,7 @@ header{
 
 
 #maior-desconto{
+	background: #eee;
 	min-height: 265px;
 	border: 0px solid #222;
 }
@@ -86,6 +90,7 @@ header{
 
 #aviso-legal{
 	padding: 20px;
+	background-color: #EFE3AF;
 	
 
 }
@@ -93,7 +98,7 @@ header{
 
 
 .leilao{
-text-align:center;
+	background: #ddd;
 	min-height: 350px;
 	text-align: center;
 	padding-bottom: 20px;
@@ -102,11 +107,10 @@ text-align:center;
 
 }
 .leilao:nth-child(odd) {
-	
+	background: #eee;
 
 }
 .leilao a{ text-decoration: none; }
-.leilao h3{  }
 .leilao span{
 	display: block;color:#666666; 
 }
@@ -116,11 +120,8 @@ text-align:center;
 .leilao .imagem-leilao{margin-bottom:10px;}
 .leilao .nome-leilao{font-weight: bold;}
 
-
-.lance{width: 100%;}
-
 .destaque{
-	text-align: left;
+	text-align: center;
 }
 .destaque h3{font-size: 30px;}
 .destaque .de{ font-size: 22px; color:#666666; font-weight: bold; }
@@ -130,7 +131,7 @@ text-align:center;
 .destaque .nome-leilao{font-weight: bold;}
 
 #maior-desconto {
-	text-align: left;
+	text-align: center;
 }
 #maior-desconto span{
 	
@@ -142,8 +143,7 @@ text-align:center;
 #maior-desconto .por{ font-size: 14px; color: #FE893D; font-weight: bold;}
 #maior-desconto .economia{ font-size: 14px; color:#666666; font-weight: bold; }
 
-#maior-desconto .desconto{ font-size: 90px; font-weight: bold; 
-	#maior-desconto .desconto span{ font-size: 40px; font-weight: bold; }
+#maior-desconto .desconto{ font-size: 38px; font-weight: bold; }
 #maior-desconto .imagem-leilao{margin-bottom:10px;}
 #maior-desconto .nome-vendido{font-weight: bold;}
 
@@ -162,7 +162,9 @@ text-align:center;
 
 /* footer */
 footer{
-
+	background: url("../images/footer.png");
+	color:#fff;
+}
 
 
 footer{
