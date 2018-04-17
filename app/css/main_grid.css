@@ -5,10 +5,12 @@ html { overflow-y: scroll; }
 
 body { font-family: sans-serif; }
 
+main{ margin-top: 20px; background-color: #fff;}
+
 /* ---- grid ---- */
 
 .grid {
-  background: #DDD;
+  background: #fff;
 }
 
 /* clear fix */
@@ -40,7 +42,7 @@ body { font-family: sans-serif; }
 
 .grid-item {
   float: left;
-  border: 1px solid #222;
+  border: 1px solid #eee !important;
 }
 
 .grid-item img {
