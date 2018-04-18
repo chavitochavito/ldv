@@ -24,14 +24,80 @@
     <!-- jQuery (obrigatório para plugins JavaScript do Bootstrap) -->
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/masonry.pkgd.min.js"></script>
+    <script src="js/isotope.pkgd.min.js"></script>
+
     <script type="text/javascript">
     $( document ).ready(function() {
-      $('.grid').masonry({
-        percentPosition: true,
-        columnWidth: '.grid-sizer',
-        itemSelector: '.grid-item'
-      });
+      // $('.grid').masonry({
+      //   percentPosition: true,
+      //   columnWidth: '.grid-sizer',
+      //   itemSelector: '.grid-item'
+      // });
+
+// init Isotope
+var $grid = $('.grid').isotope({
+  itemSelector: '.grid-item',
+  layoutMode: 'masonry',
+  getSortData: {
+    name: '.name',
+    symbol: '.symbol',
+    number: '.number parseInt',
+    category: '[data-category]',
+    weight: function( itemElem ) {
+      var weight = $( itemElem ).find('.weight').text();
+      return parseFloat( weight.replace( /[\(\)]/g, '') );
+    }
+  },
+  masonry: {
+    columnWidth: 250
+  }
+});
+
+// filter functions
+var filterFns = {
+  // show if number is greater than 50
+  numberGreaterThan50: function() {
+    var number = $(this).find('.number').text();
+    return parseInt( number, 10 ) > 50;
+  },
+  // show if name ends with -ium
+  ium: function() {
+    var name = $(this).find('.name').text();
+    return name.match( /ium$/ );
+  }
+};
+
+// bind filter button click
+$('#filters').on( 'click', 'button', function() {
+  var filterValue = $( this ).attr('data-filter');
+  // use filterFn if matches value
+  filterValue = filterFns[ filterValue ] || filterValue;
+  $grid.isotope({ filter: filterValue });
+});
+
+// bind sort button click
+$('#sorts').on( 'click', 'button', function() {
+  var sortByValue = $(this).attr('data-sort-by');
+  $grid.isotope({ sortBy: sortByValue });
+});
+
+// change is-checked class on buttons
+$('.button-group').each( function( i, buttonGroup ) {
+  var $buttonGroup = $( buttonGroup );
+  $buttonGroup.on( 'click', 'button', function() {
+    $buttonGroup.find('.is-checked').removeClass('is-checked');
+    $( this ).addClass('is-checked');
+  });
+});
+  
+
+
+
+
+
+
+
+
     });
 
 
@@ -41,7 +107,7 @@
   <body>
     <header>
         <nav class="navbar navbar-default navbar-fixed-top">
-          <div class="container">
+          <div class="container-fluid">
             <div class="navbar-header">
               <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
@@ -58,22 +124,16 @@
                 <li><a href="#">Como funciona</a></li>
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Categorias <span class="caret"></span></a>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Leilões ativos</a></li>
-                    <li><a href="#">Eletrônicos</a></li>
-                    <li><a href="#">Informática</a></li>
-                    <li><a href="#">U. Domésticos</a></li>
-                    <li><a href="#">Art. Pessoais</a></li>
-                    <li><a href="#">Games</a></li>
-                    <li><a href="#">A. Esportivos</a></li>
-                    <li><a href="#">Celulares</a></li>
-                    <li><a href="#">Pacotes</a></li>
-                    <li><a href="#">Brinquedos</a></li>
-                    <li><a href="#">Esporte</a></li>
-                    <li><a href="#">Automotivo</a></li>
-                    <li><a href="#">Parcerias</a></li>
-                    <li><a href="#">Vale Presente</a></li>               
-                  </ul>
+                 <div class="dropdown-menu">
+                         <div id="filters" class="button-group">  
+        <button class="button is-checked" data-filter="*">todos</button>
+        <button class="button" data-filter=".eletronicos">eletronicos</button>
+        <button class="button" data-filter=".artigos-esportivos">artigos esportivos</button>
+        <button class="button" data-filter=".informatica">informatica</button>
+        <button class="button" data-filter=".vale-presente">vale presente</button>
+        <button class="button" data-filter=".combustivel">combustivel</button>
+      </div>
+                 </div>
                 </li>
               </ul>
               <ul class="nav navbar-nav navbar-right">
@@ -86,6 +146,7 @@
         </nav>
     </header>
     <main>
+
         <div class="grid">
           <div class="grid-sizer"></div>
 
@@ -101,11 +162,9 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
-
           </div>
 
-
-          <div class="leilao grid-item grid-item">
+          <div class="leilao grid-item grid-item informatica"  data-category="informatica">
              <a href="#">
                <h3>Iphone R$ 600,00</h3>
                <img class="imagem-leilao img-fluid" src="images/produto_iphone.jpg">
@@ -116,9 +175,9 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
-
           </div>
-           <div class="leilao grid-item grid-item">
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
              <a href="#">
                <h3>Iphone R$ 600,00</h3>
                <img class="imagem-leilao img-fluid" src="images/produto_tv.jpg">
@@ -129,9 +188,9 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
 
-          </div>  
-           <div class="leilao grid-item grid-item">
+          <div class="leilao grid-item grid-item combustivel" data-category="combustivel">
              <a href="#">
                <h3>km de vantagens</h3>
                <img class="imagem-leilao img-fluid" src="images/produto_kmdevantagens.jpg">
@@ -142,10 +201,9 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
-
           </div>  
 
-           <div class="leilao grid-item grid-item">
+          <div class="leilao grid-item grid-item informatica" data-category="informatica">
              <a href="#">
                <h3>celular motorola</h3>
                <img class="imagem-leilao img-fluid" src="images/produto_moto.jpg">
@@ -156,12 +214,92 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
-
           </div> 
+
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>bicicleta</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_bike.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_climatizador.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item vale-presente" data-category="vale-presente">
+             <a href="#">
+               <h3>Vale presente R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_valepresente.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>jbl R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_caixadesom.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>mochila</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_artigoesportivo.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+
+
 <!--  -->
 
 
-          <div class="leilao grid-item grid-item">
+          <div class="leilao grid-item grid-item-2h">
+
+             <a href="#">
+               <h3>Combustível Original Ipiranga R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_combustivel.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item informatica"  data-category="informatica">
              <a href="#">
                <h3>Iphone R$ 600,00</h3>
                <img class="imagem-leilao img-fluid" src="images/produto_iphone.jpg">
@@ -172,9 +310,9 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
-
           </div>
-           <div class="leilao grid-item grid-item">
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
              <a href="#">
                <h3>Iphone R$ 600,00</h3>
                <img class="imagem-leilao img-fluid" src="images/produto_tv.jpg">
@@ -185,9 +323,9 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
 
-          </div>  
-           <div class="leilao grid-item grid-item">
+          <div class="leilao grid-item grid-item combustivel" data-category="combustivel">
              <a href="#">
                <h3>km de vantagens</h3>
                <img class="imagem-leilao img-fluid" src="images/produto_kmdevantagens.jpg">
@@ -198,10 +336,9 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
-
           </div>  
 
-           <div class="leilao grid-item grid-item">
+          <div class="leilao grid-item grid-item informatica" data-category="informatica">
              <a href="#">
                <h3>celular motorola</h3>
                <img class="imagem-leilao img-fluid" src="images/produto_moto.jpg">
@@ -212,12 +349,91 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
-
           </div> 
+
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>bicicleta</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_bike.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_climatizador.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item vale-presente" data-category="vale-presente">
+             <a href="#">
+               <h3>Vale presente R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_valepresente.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>jbl R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_caixadesom.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>mochila</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_artigoesportivo.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+
+
 <!--  -->
 
+          <div class="leilao grid-item grid-item-2h">
 
-          <div class="leilao grid-item grid-item">
+             <a href="#">
+               <h3>Combustível Original Ipiranga R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_combustivel.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item informatica"  data-category="informatica">
              <a href="#">
                <h3>Iphone R$ 600,00</h3>
                <img class="imagem-leilao img-fluid" src="images/produto_iphone.jpg">
@@ -228,9 +444,9 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
-
           </div>
-           <div class="leilao grid-item grid-item">
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
              <a href="#">
                <h3>Iphone R$ 600,00</h3>
                <img class="imagem-leilao img-fluid" src="images/produto_tv.jpg">
@@ -241,9 +457,9 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
 
-          </div>  
-           <div class="leilao grid-item grid-item">
+          <div class="leilao grid-item grid-item combustivel" data-category="combustivel">
              <a href="#">
                <h3>km de vantagens</h3>
                <img class="imagem-leilao img-fluid" src="images/produto_kmdevantagens.jpg">
@@ -254,10 +470,9 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
-
           </div>  
 
-           <div class="leilao grid-item grid-item">
+          <div class="leilao grid-item grid-item informatica" data-category="informatica">
              <a href="#">
                <h3>celular motorola</h3>
                <img class="imagem-leilao img-fluid" src="images/produto_moto.jpg">
@@ -268,12 +483,91 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
-
           </div> 
+
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>bicicleta</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_bike.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_climatizador.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item vale-presente" data-category="vale-presente">
+             <a href="#">
+               <h3>Vale presente R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_valepresente.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>jbl R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_caixadesom.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>mochila</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_artigoesportivo.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+
+
 <!--  -->
 
+          <div class="leilao grid-item grid-item-2h">
 
-          <div class="leilao grid-item grid-item">
+             <a href="#">
+               <h3>Combustível Original Ipiranga R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_combustivel.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item informatica"  data-category="informatica">
              <a href="#">
                <h3>Iphone R$ 600,00</h3>
                <img class="imagem-leilao img-fluid" src="images/produto_iphone.jpg">
@@ -284,9 +578,9 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
-
           </div>
-           <div class="leilao grid-item grid-item">
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
              <a href="#">
                <h3>Iphone R$ 600,00</h3>
                <img class="imagem-leilao img-fluid" src="images/produto_tv.jpg">
@@ -297,9 +591,9 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
 
-          </div>  
-           <div class="leilao grid-item grid-item">
+          <div class="leilao grid-item grid-item combustivel" data-category="combustivel">
              <a href="#">
                <h3>km de vantagens</h3>
                <img class="imagem-leilao img-fluid" src="images/produto_kmdevantagens.jpg">
@@ -310,10 +604,9 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
-
           </div>  
 
-           <div class="leilao grid-item grid-item">
+          <div class="leilao grid-item grid-item informatica" data-category="informatica">
              <a href="#">
                <h3>celular motorola</h3>
                <img class="imagem-leilao img-fluid" src="images/produto_moto.jpg">
@@ -324,57 +617,1061 @@
                <span class="nome-leilao">Albatroz</span>
              </a>
              <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
-
           </div> 
+
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>bicicleta</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_bike.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_climatizador.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item vale-presente" data-category="vale-presente">
+             <a href="#">
+               <h3>Vale presente R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_valepresente.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>jbl R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_caixadesom.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>mochila</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_artigoesportivo.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+
+
 <!--  -->
 
- </main> 	
+          <div class="leilao grid-item grid-item-2h">
+
+             <a href="#">
+               <h3>Combustível Original Ipiranga R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_combustivel.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item informatica"  data-category="informatica">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_iphone.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_tv.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item combustivel" data-category="combustivel">
+             <a href="#">
+               <h3>km de vantagens</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_kmdevantagens.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>  
+
+          <div class="leilao grid-item grid-item informatica" data-category="informatica">
+             <a href="#">
+               <h3>celular motorola</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_moto.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>bicicleta</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_bike.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_climatizador.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item vale-presente" data-category="vale-presente">
+             <a href="#">
+               <h3>Vale presente R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_valepresente.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>jbl R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_caixadesom.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>mochila</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_artigoesportivo.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
 
 
 
-         <footer>
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-md-3">
-                  <h4>Formas de pagamento</h4>
-                  <br>
-                  Crédito <br><img src="images/bandeiras-credito.jpg"><br>
-                  Débito <br><img src="images/bandeiras-debito.jpg"><br>
-                  Outros <br><img src="images/bandeiras-outros.jpg"><br>
+<!--  -->
+
+          <div class="leilao grid-item grid-item-2h">
+
+             <a href="#">
+               <h3>Combustível Original Ipiranga R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_combustivel.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item informatica"  data-category="informatica">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_iphone.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_tv.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item combustivel" data-category="combustivel">
+             <a href="#">
+               <h3>km de vantagens</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_kmdevantagens.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>  
+
+          <div class="leilao grid-item grid-item informatica" data-category="informatica">
+             <a href="#">
+               <h3>celular motorola</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_moto.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>bicicleta</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_bike.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_climatizador.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item vale-presente" data-category="vale-presente">
+             <a href="#">
+               <h3>Vale presente R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_valepresente.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>jbl R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_caixadesom.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>mochila</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_artigoesportivo.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
 
 
-                </div>
-                <div class="col-md-3">
 
-                  <h4>A Empresa</h4>
+<!--  -->
+
+          <div class="leilao grid-item grid-item-2h">
+
+             <a href="#">
+               <h3>Combustível Original Ipiranga R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_combustivel.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item informatica"  data-category="informatica">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_iphone.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_tv.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item combustivel" data-category="combustivel">
+             <a href="#">
+               <h3>km de vantagens</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_kmdevantagens.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>  
+
+          <div class="leilao grid-item grid-item informatica" data-category="informatica">
+             <a href="#">
+               <h3>celular motorola</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_moto.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>bicicleta</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_bike.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_climatizador.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item vale-presente" data-category="vale-presente">
+             <a href="#">
+               <h3>Vale presente R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_valepresente.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>jbl R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_caixadesom.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>mochila</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_artigoesportivo.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
 
 
-                  Termos de uso<br>
-                  Quem somos<br>
-                  Privacidade<br>
-                  Dúvidas<br>
-                  Contato
 
-                </div>
-                <div class="col-md-3">
+<!--  -->
 
-                  <h4>Segurança</h4>
+          <div class="leilao grid-item grid-item-2h">
 
-                  O Programa Lances de Vantagens possui auditoria periódica e certificação de segurança emitida por empresa especializada que atesta a segurança de suas aplicações. Estes procedimentos podem não impedir a eventual intervenção de terceiros através da utilização de “softwares” para cliques automáticos.
+             <a href="#">
+               <h3>Combustível Original Ipiranga R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_combustivel.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
 
-                </div>
-                <div class="col-md-3">
-                  <h4>Powered By</h4>
-                     <br><img src="images/ublogo-ipiranga.jpg">
-                </div>
-              </div>
+          <div class="leilao grid-item grid-item informatica"  data-category="informatica">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_iphone.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
 
-            </footer>
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_tv.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item combustivel" data-category="combustivel">
+             <a href="#">
+               <h3>km de vantagens</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_kmdevantagens.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>  
+
+          <div class="leilao grid-item grid-item informatica" data-category="informatica">
+             <a href="#">
+               <h3>celular motorola</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_moto.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>bicicleta</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_bike.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_climatizador.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item vale-presente" data-category="vale-presente">
+             <a href="#">
+               <h3>Vale presente R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_valepresente.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>jbl R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_caixadesom.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>mochila</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_artigoesportivo.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+
+
+<!--  -->
+
+          <div class="leilao grid-item grid-item-2h">
+
+             <a href="#">
+               <h3>Combustível Original Ipiranga R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_combustivel.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item informatica"  data-category="informatica">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_iphone.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_tv.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item combustivel" data-category="combustivel">
+             <a href="#">
+               <h3>km de vantagens</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_kmdevantagens.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>  
+
+          <div class="leilao grid-item grid-item informatica" data-category="informatica">
+             <a href="#">
+               <h3>celular motorola</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_moto.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>bicicleta</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_bike.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_climatizador.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item vale-presente" data-category="vale-presente">
+             <a href="#">
+               <h3>Vale presente R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_valepresente.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>jbl R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_caixadesom.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>mochila</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_artigoesportivo.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+
+
+<!--  -->
+
+          <div class="leilao grid-item grid-item-2h">
+
+             <a href="#">
+               <h3>Combustível Original Ipiranga R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_combustivel.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item informatica"  data-category="informatica">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_iphone.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_tv.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item combustivel" data-category="combustivel">
+             <a href="#">
+               <h3>km de vantagens</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_kmdevantagens.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>  
+
+          <div class="leilao grid-item grid-item informatica" data-category="informatica">
+             <a href="#">
+               <h3>celular motorola</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_moto.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>bicicleta</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_bike.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_climatizador.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item vale-presente" data-category="vale-presente">
+             <a href="#">
+               <h3>Vale presente R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_valepresente.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>jbl R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_caixadesom.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>mochila</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_artigoesportivo.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+
+
+<!--  -->
+
+          <div class="leilao grid-item grid-item-2h">
+
+             <a href="#">
+               <h3>Combustível Original Ipiranga R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_combustivel.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item informatica"  data-category="informatica">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_iphone.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_tv.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item combustivel" data-category="combustivel">
+             <a href="#">
+               <h3>km de vantagens</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_kmdevantagens.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>  
+
+          <div class="leilao grid-item grid-item informatica" data-category="informatica">
+             <a href="#">
+               <h3>celular motorola</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_moto.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>bicicleta</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_bike.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>Iphone R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_climatizador.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item vale-presente" data-category="vale-presente">
+             <a href="#">
+               <h3>Vale presente R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_valepresente.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+
+          <div class="leilao grid-item grid-item eletronicos" data-category="eletronicos">
+             <a href="#">
+               <h3>jbl R$ 600,00</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_caixadesom.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div>
+          <div class="leilao grid-item grid-item artigos-esportivos" data-category="artigos-esportivos">
+             <a href="#">
+               <h3>mochila</h3>
+               <img class="imagem-leilao img-fluid" src="images/produto_artigoesportivo.jpg">
+               <span class="desc">Vivamus scelerisque ipsum quis ante tristique, in viverra nunc feugiat. In felis ligula, posuere quis sollicitudin et, tincidunt sed enim.</span>
+               <span class="de">de: R$500,00</span>
+               <span class="por">por: R$0,02</span>
+               <span class="cronometro">00:00:00</span>
+               <span class="nome-leilao">Albatroz</span>
+             </a>
+             <a class="lance btn btn-lg btn-warning" href="#" role="button">LANCE</a>
+          </div> 
+
+
+
+<!--  -->
+        </div>
+    </main> 	
+
+
+
+    <footer>
+      <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          <h4>Formas de pagamento</h4>
+          <br>
+          Crédito <br><img src="images/bandeiras-credito.jpg"><br>
+          Débito <br><img src="images/bandeiras-debito.jpg"><br>
+          Outros <br><img src="images/bandeiras-outros.jpg"><br>
+
+
+        </div>
+        <div class="col-md-3">
+
+          <h4>A Empresa</h4>
+
+
+          Termos de uso<br>
+          Quem somos<br>
+          Privacidade<br>
+          Dúvidas<br>
+          Contato
+
+        </div>
+        <div class="col-md-3">
+
+          <h4>Segurança</h4>
+
+          O Programa Lances de Vantagens possui auditoria periódica e certificação de segurança emitida por empresa especializada que atesta a segurança de suas aplicações. Estes procedimentos podem não impedir a eventual intervenção de terceiros através da utilização de “softwares” para cliques automáticos.
+
+        </div>
+        <div class="col-md-3">
+          <h4>Powered By</h4>
+             <br><img src="images/ublogo-ipiranga.jpg">
+        </div>
+      </div>
+
+    </footer>
 
 
 
 
 
 
-          </body>
-          </html>
+</body>
+</html>
