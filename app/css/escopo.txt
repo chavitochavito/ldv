@@ -1,0 +1,71 @@
+
+**lances de vantagem - site de leião por centavo* 
+
+objetivo: usuarios darem o maximo de lances.
+
+
+--
+--
+--
+
+
+*estrutura do site*
+
+topo(fixo){
+	logo;
+	menu;
+	login;
+	filtro de categorias;
+}
+
+conteudo(home){
+	informações sobre o site;
+	hero(gwd){
+	"pode exibir um destaque no topo do site.";
+
+	};
+	
+	leilões(leilao){
+		titulo;
+		imagem;
+		preço de;
+		preço por;
+		cronometro regressivo;
+		nome do usuario que estava com o lance;
+		botão do lance CTA;
+		descrição;
+		data de inicio(){
+			"exibi se data de inicio é antes do que hj"
+			data;
+			hora;
+		};
+	};
+}
+
+rodapé{
+	formas de pagamento;
+	a empresa (){
+	 links institucionais(){
+	 	Termos de uso;
+		Quem somos;
+		Privacidade;
+		Dúvidas;
+		Contato;
+	 };
+	};
+	selos de segurança;
+	powered by;
+}
+ 
+
+
+
+*breaking points*
+
+-800 1col;
++800 3col;
++1024 4col;
++1300 5 col;
++1500 6 colunas;
+
+

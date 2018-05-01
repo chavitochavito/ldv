@@ -134,3 +134,16 @@ main{ margin-top: 50px; background-color: #fff;}
 
 }
 
+
+
+/* */
+.logo{
+  background-image: url("../images/Logo.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-clip: content-box;
+  display: block;
+  width: 160px !important;
+  height: 75px !important;
+  text-indent: -12000px;
+}

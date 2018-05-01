@@ -5,3 +5,43 @@ to do list
 v* colocar texto legl
 
 * colocar lance com maior desconto
+
+* instalar o sass
+
+loadingdf
+
+
+
+grid com porcentagem
+
+
+
+
+*interna*
+
+
+titulo do leilão
+
+imagem do produto (com tres opções)]
+relogio do leilão{
+	preço atual
+	usuario
+	relogio
+	botnao do lance
+	texto explicativo
+
+}
+
+preço{
+	preço do mercado
+	vc esta economizando
+	frete
+
+	comprando com total de descoto
+}
+
+ultimos lances{
+	lista com o nome e valor dos lances
+
+}
+descrição do produto
